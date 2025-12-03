@@ -1,73 +1,86 @@
 <template>
   <div class="inventory-page">
-    <div class="stats-summary">
-      <span>❤️ HP: {{ playerStore.stats.hp }}/{{ playerStore.stats.maxHp }}</span>
-      <span>⚔️ ATK: {{ playerStore.stats.atk }}</span>
+    <h2>🎒 Túi Đồ ({{ playerStore.inventory.length }})</h2>
+
+    <div class="item-grid">
+      <div v-for="item in playerStore.inventory" :key="item.id" class="item-card"
+        :class="{ 'equipped': item.equipped }">
+        <div class="item-icon">
+          <img :src="item.icon" alt="icon" />
+        </div>
+        <div class="item-info">
+          <h4>{{ item.name }}</h4>
+          <p class="stats-text">
+            <span v-if="item.bonusAtk > 0">⚔️+{{ item.bonusAtk }} </span>
+            <span v-if="item.bonusDef > 0">🛡️+{{ item.bonusDef }} </span>
+            <span v-if="item.bonusHp > 0">❤️+{{ item.bonusHp }} </span>
+          </p>
+        </div>
+        <div class="item-action">
+          <button v-if="!item.equipped" @click="playerStore.equipItemApi(item)" class="btn-equip">Trang bị</button>
+          <span v-else class="text-equipped">Đang mặc</span>
+        </div>
+      </div>
     </div>
-
-    <h2>🎒 Túi Đồ ({{ playerStore.inventory.length }} món)</h2>
-
-    <table class="item-table">
-      <thead>
-        <tr>
-          <th>Tên</th>
-          <th>Loại</th>
-          <th>Hiệu quả</th>
-          <th>Số lượng</th>
-          <th>Hành động</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="item in playerStore.inventory" :key="item.id">
-          <td>{{ item.icon }} {{ item.name }}</td>
-          <td>{{ item.type === 'consumable' ? 'Tiêu hao' : 'Trang bị' }}</td>
-          <td>{{ item.description }}</td>
-          <td>x{{ item.quantity }}</td>
-          <td>
-            <button 
-              v-if="item.type === 'consumable'" 
-              class="btn-use"
-              @click="playerStore.useConsumable(item)"
-            >
-              Dùng
-            </button>
-            <button 
-              v-else 
-              class="btn-equip"
-              @click="playerStore.equipItem(item)"
-            >
-              Trang bị
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
   </div>
 </template>
 
 <script setup>
 import { onMounted } from 'vue';
 import { usePlayerStore } from '@/stores/player';
-
 const playerStore = usePlayerStore();
 
-// Khi vào trang thì tải dữ liệu ngay
-onMounted(() => {
-  playerStore.fetchPlayerData();
-});
+onMounted(() => playerStore.fetchPlayerData());
 </script>
 
 <style scoped>
-/* Giữ nguyên CSS cũ của bạn hoặc dùng lại style.css */
-.stats-summary {
-  background: #333;
-  padding: 10px;
-  color: #ffd166;
-  margin-bottom: 15px;
-  border-radius: 5px;
-  font-weight: bold;
-  display: flex;
-  gap: 20px;
+.inventory-page {
+  color: white;
+  padding: 20px;
 }
-/* ... (CSS bảng item như trước) ... */
+
+.item-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.item-card {
+  background: #222;
+  border: 1px solid #444;
+  padding: 10px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.item-card.equipped {
+  border-color: #ffd700;
+  box-shadow: 0 0 10px #ffd70055;
+}
+
+.item-icon img {
+  width: 50px;
+  height: 50px;
+}
+
+.btn-equip {
+  background: #06d6a0;
+  border: none;
+  padding: 5px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #000;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+.text-equipped {
+  color: #ffd700;
+  font-size: 0.9rem;
+  font-weight: bold;
+  margin-top: 8px;
+}
 </style>
