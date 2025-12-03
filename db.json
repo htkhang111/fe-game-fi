@@ -1,0 +1,35 @@
+{
+  "player": {
+    "hp": 100,
+    "maxHp": 100,
+    "energy": 50,
+    "maxEnergy": 50,
+    "atk": 10,
+    "def": 5,
+    "spd": 10,
+    "lv": 1,
+    "exp": 0,
+    "gold": 100
+  },
+  "inventory": [
+    {
+      "id": 1,
+      "name": "Potion nhỏ",
+      "type": "consumable",
+      "description": "Hồi 30 HP",
+      "effect": { "hp": 30 },
+      "quantity": 5,
+      "icon": "🧪"
+    },
+    {
+      "id": 2,
+      "name": "Kiếm gỗ",
+      "type": "equipment",
+      "slot": "weapon",
+      "description": "Tăng 3 ATK",
+      "effect": { "atk": 3 },
+      "quantity": 1,
+      "icon": "🗡️"
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+/* src/assets/css/main.css */
+:root {
+    /* --- DARK THEME GAMING --- */
+    --bg-app: #121212;
+    /* Nền tổng thể tối nhất */
+    --bg-panel: #1e1e1e;
+    /* Nền các khung/bảng */
+    --border-color: #333;
+    /* Viền mờ */
+
+    --text-main: #e0e0e0;
+    /* Chữ trắng xám */
+    --text-mute: #a0a0a0;
+    /* Chữ phụ tối hơn */
+
+    /* Màu chức năng (Neon/RPG) */
+    --primary: #00b4d8;
+    /* Xanh Stats */
+    --danger: #ef476f;
+    /* Đỏ Equip */
+    --gold: #ffd166;
+    /* Vàng Inventory */
+    --accent: #06d6a0;
+    /* Xanh lá điểm nhấn */
+
+    --radius: 8px;
+    /* Bo góc nhẹ thôi cho nam tính */
+    --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-main);
+    background-color: var(--bg-app);
+    color: var(--text-main);
+    overflow: hidden;
+    /* Ẩn scroll body để app tự scroll */
+}
+
+/* Scrollbar đẹp cho Webkit */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #444;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #666;
+}

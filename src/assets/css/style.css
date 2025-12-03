@@ -1,0 +1,145 @@
+/* ==== STYLE CHUNG CHO TOÀN TRANG ==== */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", sans-serif;
+  background: #1a1a1a;
+  color: #eee;
+  display: flex;
+}
+
+/* ==== SIDEBAR ==== */
+.sidebar {
+  width: 220px;
+  background: #222;
+  height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+  border-right: 2px solid #444;
+}
+
+.sidebar h2 {
+  color: #ffd166;
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 22px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar ul li {
+  padding: 10px 15px;
+  margin: 8px 0;
+  background: #333;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.sidebar ul li:hover {
+  background: #444;
+  transform: translateX(3px);
+}
+
+.sidebar ul li.active {
+  background: #ffd166;
+  color: #222;
+  font-weight: bold;
+}
+
+/* ==== KHU VỰC NỘI DUNG ==== */
+.main-content {
+  flex: 1;
+  padding: 20px;
+}
+
+/* ==== BẢNG ITEM ==== */
+.item-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.item-table th, .item-table td {
+  border: 1px solid #444;
+  padding: 10px;
+  text-align: center;
+}
+
+.item-table th {
+  background: #333;
+}
+
+.item-table td {
+  background: #2a2a2a;
+}
+
+.btn-use {
+  background: #06d6a0;
+  color: #000;
+  border: none;
+  border-radius: 6px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.2s;
+}
+
+.btn-use:hover {
+  background: #04c68e;
+}
+
+/*Ver 2.1*/
+/* === MAIN CONTENT === */
+/* .main-content {
+  flex: 1;
+  padding: 20px;
+} */
+
+/* === GAMEPLAY CONTAINER === */
+.game-container {
+  margin-top: 20px;
+  background: #2b2b2b;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 0 10px #0006;
+}
+
+.stats {
+  margin-bottom: 15px;
+}
+
+#gameplay-area {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  font-size: 50px;
+  margin-bottom: 20px;
+}
+
+.controls button {
+  background: #06d6a0;
+  border: none;
+  color: #000;
+  padding: 10px 15px;
+  margin: 5px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.controls button:hover {
+  background: #04c68e;
+}
+
+#messageBox {
+  margin-top: 15px;
+  font-style: italic;
+  color: #ffd166;
+  min-height: 20px;
+}
