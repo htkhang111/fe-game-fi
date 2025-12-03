@@ -6,32 +6,27 @@
     </div>
 
     <div class="village-menu">
-      
+
       <div class="building inn">
         <h3>🛏️ Nhà Trọ</h3>
         <p>Hồi phục toàn bộ HP và Năng lượng.</p>
         <div class="stats-preview">
-          HP: {{ playerStore.stats.hp }}/{{ playerStore.stats.maxHp }} | 
+          HP: {{ playerStore.stats.hp }}/{{ playerStore.stats.maxHp }} |
           ⚡: {{ playerStore.stats.energy }}/{{ playerStore.stats.maxEnergy }}
         </div>
-        <button class="btn-rest" @click="restAtInn">
-          💤 Ngủ một giấc (Miễn phí)
+        <button class="btn-rest" @click="handleRest" :disabled="loading">
+          {{ loading ? 'Đang ngủ...' : '💤 Ngủ một giấc (Server)' }}
         </button>
       </div>
 
       <div class="building shop opacity-50">
         <h3>🏪 Cửa Hàng (Đang xây)</h3>
       </div>
-      
-      <div class="building guild opacity-50">
-        <h3>🛡️ Hội Mạo Hiểm (Đang xây)</h3>
-      </div>
-
     </div>
 
     <div class="leave-village">
       <button class="btn-adventure" @click="$router.push('/adventure')">
-        🌲 Ra khỏi làng (Đi phiêu lưu)
+        🌲 Ra khỏi làng
       </button>
     </div>
 
@@ -40,19 +35,32 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { usePlayerStore } from '@/stores/player';
 
 const playerStore = usePlayerStore();
 const message = ref('');
+const loading = ref(false);
 
-const restAtInn = () => {
-  // Logic hồi phục
-  playerStore.restoreStats();
-  
-  message.value = "Bạn cảm thấy tràn trề năng lượng! (HP/Energy đầy)";
+const handleRest = async () => {
+  loading.value = true;
+
+  // GỌI API JAVA
+  const success = await playerStore.restAtInn();
+
+  loading.value = false;
+  if (success) {
+    message.value = "Bạn đã hồi phục hoàn toàn!";
+  } else {
+    message.value = "Có lỗi xảy ra, không thể nghỉ ngơi.";
+  }
   setTimeout(() => message.value = '', 3000);
 };
+
+// Load lại data mới nhất khi về làng
+onMounted(() => {
+  playerStore.fetchPlayerData();
+});
 </script>
 
 <style scoped>
@@ -77,7 +85,9 @@ const restAtInn = () => {
   border: 2px solid #444;
 }
 
-.inn { border-color: #118ab2; }
+.inn {
+  border-color: #118ab2;
+}
 
 .btn-rest {
   background: #118ab2;
@@ -89,7 +99,11 @@ const restAtInn = () => {
   cursor: pointer;
   margin-top: 10px;
 }
-.btn-rest:hover { background: #0e7091; }
+
+.btn-rest:disabled {
+  background: #555;
+  cursor: wait;
+}
 
 .btn-adventure {
   background: #06d6a0;
@@ -104,7 +118,10 @@ const restAtInn = () => {
   animation: pulse 2s infinite;
 }
 
-.stats-preview { margin: 10px 0; color: #aaa; }
+.stats-preview {
+  margin: 10px 0;
+  color: #aaa;
+}
 
 .toast {
   position: fixed;
@@ -120,8 +137,16 @@ const restAtInn = () => {
 }
 
 @keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.05);
+  }
+
+  100% {
+    transform: scale(1);
+  }
 }
 </style>

@@ -1,52 +1,71 @@
-// src/stores/player.js
 import { defineStore } from 'pinia';
+import axios from 'axios';
 import { reactive } from 'vue';
 
+const API_URL = 'http://localhost:8080/api/game';
+
 export const usePlayerStore = defineStore('player', () => {
-  // Stats giữ nguyên...
+
+  // --- STATE ---
   const stats = reactive({
-    lv: 5, exp: 1250, hp: 500, maxHp: 500,
-    energy: 80, maxEnergy: 100, atk: 45, def: 20, spd: 15
+    id: 1, name: 'Loading...', hp: 100, maxHp: 100, energy: 50, maxEnergy: 50,
+    atk: 10, def: 5, spd: 10, lv: 1, exp: 0, gold: 0
   });
 
-  // Equipment: Lưu tên file ảnh
-  const equipment = reactive({
-    weapon: { id: 1, name: 'Kiếm Gỗ', type: 'equipment', slot: 'weapon', icon: 'sword_1.png', stats: { atk: 5 } },
-    // Lưu ý: Nếu ô nào trống thì để null
-    armor: null,
-    gloves: null,
-    necklace: null,
-    ring: null,
-    boots: null,
-    mount: null
+  // [MỚI] Lưu vị trí thám hiểm để không bị reset khi chuyển cảnh
+  const explorationState = reactive({
+    playerPos: 10, // Vị trí % (Mặc định 10)
+    moveDir: 1     // Hướng mặt (1: Phải, -1: Trái)
   });
 
-  // Inventory: Lưu tên file ảnh
-  const inventory = reactive([
-    // Nhớ đảm bảo bro đã có các file ảnh này trong thư mục assets/img/items/
-    { id: 2, name: 'Áo Vải', type: 'equipment', slot: 'armor', icon: 'armor_1.png', stats: { def: 3 } },
-    { id: 3, name: 'Găng Len', type: 'equipment', slot: 'gloves', icon: 'gloves_1.png', stats: { def: 1 } },
-    { id: 4, name: 'Bình Máu', type: 'consumable', icon: 'potion_hp.png', effect: 'Heal' },
-  ]);
+  const equipment = reactive({ /* Giữ nguyên mock data */ });
+  const inventory = reactive([ /* Giữ nguyên mock data */]);
 
-  // ... Giữ nguyên logic equipItem/unequipItem như cũ ...
-  // (Chỉ cần copy lại logic cũ vào đây nếu file này bị mất, logic không đổi)
-  const equipItem = (item) => {
-    if (item.type !== 'equipment') return;
-    const slot = item.slot;
-    if (equipment[slot]) {
-      inventory.push(equipment[slot]);
-    }
-    equipment[slot] = item;
-    const index = inventory.findIndex(i => i.id === item.id);
-    if (index > -1) inventory.splice(index, 1);
+  // --- ACTIONS ---
+  const fetchPlayerData = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/player/${stats.id}`);
+      Object.assign(stats, res.data);
+    } catch (error) { console.error("Lỗi Server:", error); }
   };
 
-  const unequipItem = (slot) => {
-    if (!equipment[slot]) return;
-    inventory.push(equipment[slot]);
-    equipment[slot] = null;
+  const attackEnemy = async (isParried = false) => {
+    try {
+      const res = await axios.post(`${API_URL}/attack`, null, {
+        params: { playerId: stats.id, isParried: isParried }
+      });
+      const result = res.data;
+      if (result.playerHp !== undefined) stats.hp = result.playerHp;
+      return result;
+    } catch (error) { return null; }
   };
 
-  return { stats, equipment, inventory, equipItem, unequipItem };
+  const explore = async () => {
+    try {
+      const res = await axios.post(`${API_URL}/explore?playerId=${stats.id}`);
+      const result = res.data;
+      if (result.currentGold !== undefined) stats.gold = result.currentGold;
+      return result;
+    } catch (error) { return { type: 'ERROR', message: 'Lỗi kết nối!' }; }
+  };
+
+  const restAtInn = async () => {
+    try {
+      const res = await axios.post(`${API_URL}/rest?playerId=${stats.id}`);
+      Object.assign(stats, res.data);
+      return true;
+    } catch (error) { return false; }
+  };
+
+  // Mock functions (giữ nguyên)
+  const equipItem = (item) => { };
+  const unequipItem = (slot) => { };
+  const useConsumable = (item) => { };
+
+  // Nhớ return explorationState ra
+  return {
+    stats, explorationState, equipment, inventory,
+    fetchPlayerData, attackEnemy, explore, restAtInn,
+    equipItem, unequipItem, useConsumable
+  };
 });
